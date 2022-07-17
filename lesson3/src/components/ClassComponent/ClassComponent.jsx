@@ -12,15 +12,17 @@ export class ClassComponent extends React.Component {
         Math.floor(Math.random() * this.props.max - this.props.min) +
         this.props.min,
       count: 0,
+      repeat: style.hidden,
+      btnDisabled: false,
     };
   }
 
   handleSubmit = (event) => {
     event.preventDefault();
-    this.setState(state => ({
+    this.setState((state) => ({
       count: this.state.count + 1,
     }));
-    this.setState(state => {
+    this.setState((state) => {
       if (!state.userNumber) {
         return {
           result: `Введите число`,
@@ -42,6 +44,9 @@ export class ClassComponent extends React.Component {
       return {
         result: `Вы нострадамус - угадали загаданое число  ${state.userNumber},
         потыток ${state.count}`,
+        userNumber: '',
+        repeat: style.btnRepeat,
+        btnDisabled: true,
       };
     });
   };
@@ -52,21 +57,44 @@ export class ClassComponent extends React.Component {
     });
   };
 
+  handleRepeat = (event) => {
+    this.setState({
+      result: 'Результат',
+      userNumber: '',
+      randomNumber:
+        Math.floor(Math.random() * this.props.max - this.props.min) +
+        this.props.min,
+      repeat: style.hidden,
+      count: 0,
+      btnDisabled: false,
+    });
+  };
+
   render() {
     return (
-      <div className={style.game}>
-        <p className={style.result}>{this.state.result}</p>
+      <div className='render__box'>
+        <div className={style.game}>
+          <p className={style.result}>{this.state.result}</p>
 
-        <form className={style.form} onSubmit={this.handleSubmit}>
-          <label className={style.label} htmlFor='user_number'>
-            Угадай число
-          </label>
+          <form className={style.form} onSubmit={this.handleSubmit}>
+            <label className={style.label} htmlFor='user_number'>
+              Угадай число
+            </label>
 
-          <input className={style.input} type='number' id='user_number'
-            onChange={this.handleChange} value={this.state.userNumber}
-          />
-          <button className={style.btn}>Угадать</button>
-        </form>
+            <input
+              className={style.input}
+              type='number'
+              id='user_number'
+              onChange={this.handleChange}
+              value={this.state.userNumber}
+            />
+            <button className={style.btn}>Угадать</button>
+          </form>
+        </div>
+
+        <button className={this.state.repeat} onClick={this.handleRepeat}>
+          Сыграть ещё
+        </button>
       </div>
     );
   }
